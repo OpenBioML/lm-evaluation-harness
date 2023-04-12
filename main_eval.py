@@ -3,10 +3,6 @@ import json
 import logging
 import fnmatch
 import wandb
-from pathlib import Path
-from typing import Union
-import yaml
-from pydantic import BaseModel
 
 from lm_eval import tasks, evaluator, config
 
