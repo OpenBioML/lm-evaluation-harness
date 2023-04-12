@@ -8,35 +8,9 @@ from typing import Union
 import yaml
 from pydantic import BaseModel
 
-from lm_eval import tasks, evaluator
+from lm_eval import tasks, evaluator, config
 
 logging.getLogger("openai").setLevel(logging.WARNING)
-
-
-def load_config(path: Union[str, Path]):
-    with open(path, "r") as stream:
-        try:
-            return yaml.safe_load(stream)
-        except yaml.YAMLError as exc:
-            print(exc)
-
-
-class EvalPipelineConfig(BaseModel):
-    model: str
-    pre_trained_path: str
-    model_args: str = ""
-    tasks: str = None # string of tasks seperated by commas with no spaces
-    num_fewshot: int = 0
-    batch_size: int = None
-    device: str = None
-    no_cache: bool = True
-    limit: int = None
-    decontamination_ngrams_path: str = None
-    check_integrity: bool = False
-    description_dict_path: str = None
-    wandb_log: bool = False
-    wandb_project: str = None
-    wandb_run_name: str = None
 
 
 # Returns a list containing all values of the source_list that
@@ -53,8 +27,8 @@ def main(config_path: str) -> None:
 
     print('running')
 
-    raw_config = load_config(config_path)
-    args = EvalPipelineConfig(**raw_config)
+    raw_config = config.load_config(config_path)
+    args = config.EvalPipelineConfig(**raw_config)
 
     if args.wandb_log:
         assert (args.wandb_project is not None) and (args.wandb_run_name is not None)
@@ -91,7 +65,6 @@ def main(config_path: str) -> None:
     print(dumped)
 
     if args.wandb_log:
-    # TODO: where is "filter" coming from?
         for task, metrics in results["results"].items():
             wandb.log({task.split()[0]: metrics})
 
