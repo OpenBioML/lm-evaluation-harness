@@ -28,6 +28,7 @@ setuptools.setup(
         "omegaconf>=2.2",
         "pybind11>=2.6.2",
         "pycountry",
+        "pydantic",
         "pytablewriter",
         "rouge-score>=0.0.4",
         "sacrebleu==1.5.0",
@@ -36,6 +37,7 @@ setuptools.setup(
         "torch>=1.7",
         "tqdm-multiprocess",
         "transformers>=4.1",
+        "wandb",
         "zstandard",
     ],
     extras_require={
