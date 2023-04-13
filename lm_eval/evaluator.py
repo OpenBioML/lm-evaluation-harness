@@ -13,7 +13,6 @@ import transformers
 @positional_deprecated
 def simple_evaluate(
     model,
-    pre_trained_path: str,
     model_args=None,
     tasks=[],
     num_fewshot=0,
@@ -31,10 +30,6 @@ def simple_evaluate(
 
     :param model: Union[str, LM]
         Name of model or LM object, see lm_eval.models.get_model
-    :pre_trained_path: str
-    The HuggingFace Hub model ID name or the path to a pre-trained
-    model to load. This is effectively the `pretrained_model_name_or_path`
-    argument of `from_pretrained` in the HuggingFace `transformers` API.
     :param model_args: Optional[str]
         String arguments for each model class, see LM.create_from_arg_string.
         Ignored if `model` argument is a LM object.
@@ -68,7 +63,7 @@ def simple_evaluate(
         if model_args is None:
             model_args = ""
         lm = lm_eval.models.get_model(model).create_from_arg_string(
-            model_args, {"pretrained": pre_trained_path, "batch_size": batch_size, "device": device}
+            model_args, {"batch_size": batch_size, "device": device}
         )
     else:
         assert isinstance(model, lm_eval.base.LM)

@@ -44,7 +44,6 @@ def main(config_path: str) -> None:
        
     results = evaluator.simple_evaluate(
         model=args.model,
-        pre_trained_path=args.pre_trained_path,
         model_args=args.model_args,
         tasks=task_names,
         num_fewshot=args.num_fewshot,

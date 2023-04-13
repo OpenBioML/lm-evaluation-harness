@@ -14,7 +14,6 @@ def load_config(path: Union[str, Path]):
 
 class EvalPipelineConfig(BaseModel):
     model: str
-    pre_trained_path: str
     model_args: str = ""
     tasks: str = None # string of tasks seperated by commas with no spaces
     num_fewshot: int = 0
