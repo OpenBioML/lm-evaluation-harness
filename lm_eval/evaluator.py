@@ -7,7 +7,6 @@ import lm_eval.models
 import lm_eval.tasks
 import lm_eval.base
 from lm_eval.utils import positional_deprecated, run_task_tests
-import transformers
 
 
 @positional_deprecated
