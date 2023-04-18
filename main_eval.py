@@ -28,7 +28,12 @@ def main(config_path: str) -> None:
 
     if args.wandb_log:
         assert (args.wandb_project is not None) and (args.wandb_run_name is not None)
-        wandb.init(project=args.wandb_project, name=args.wandb_run_name, config=args)
+        wandb.init(
+            project=args.wandb_project, 
+            name=args.wandb_run_name, 
+            group=args.wandb_group,
+            config=args,
+        )
 
     if args.tasks is None:
         task_names = tasks.ALL_TASKS
