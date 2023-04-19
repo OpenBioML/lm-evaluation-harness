@@ -26,4 +26,5 @@ class EvalPipelineConfig(BaseModel):
     description_dict_path: str = None
     wandb_log: bool = False
     wandb_project: str = None
+    wandb_group: str = None,
     wandb_run_name: str = None
