@@ -15,6 +15,7 @@ def load_config(path: Union[str, Path]):
 class EvalPipelineConfig(BaseModel):
     model: str
     model_args: str = ""
+    is_random: bool = False
     tasks: str = None # string of tasks seperated by commas with no spaces
     num_fewshot: int = 0
     batch_size: int = None

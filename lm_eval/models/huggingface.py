@@ -66,6 +66,7 @@ class HuggingFaceAutoLM(BaseLM):
     def __init__(
         self,
         pretrained: str,
+        is_random: Optional[bool] = False,
         tokenizer: Optional[str] = None,
         subfolder: Optional[str] = None,
         revision: Optional[str] = "main",
@@ -87,6 +88,8 @@ class HuggingFaceAutoLM(BaseLM):
                 The HuggingFace Hub model ID name or the path to a pre-trained
                 model to load. This is effectively the `pretrained_model_name_or_path`
                 argument of `from_pretrained` in the HuggingFace `transformers` API.
+            is_random (bool, optional, defaults to False):
+                If True the specified model will be loaded with random weights.
             add_special_tokens (bool, optional, defaults to True):
                 Whether to add special tokens to the input sequences. If `None`, the
                 default value will be set to `True` for seq2seq models (e.g. T5) and
@@ -168,13 +171,17 @@ class HuggingFaceAutoLM(BaseLM):
                 max_cpu_memory,
                 offload_folder,
             )
-        self.model = self._create_auto_model(
-            pretrained=pretrained,
-            revision=revision,
-            subfolder=subfolder,
-            torch_dtype=_get_dtype(dtype, self._config),
-            **accelerate_kwargs,
-        )
+
+        if is_random: 
+            self.model = self._create_random_model(config=self._config)
+        else:
+            self.model = self._create_auto_model(
+                pretrained=pretrained,
+                revision=revision,
+                subfolder=subfolder,
+                torch_dtype=_get_dtype(dtype, self._config),
+                **accelerate_kwargs,
+            )
         self.model.eval()
         torch.set_grad_enabled(False)
 
@@ -207,6 +214,14 @@ class HuggingFaceAutoLM(BaseLM):
             offload_folder=offload_folder,
             torch_dtype=torch_dtype,
         )
+        return model
+
+    def _create_random_model(
+        self,
+        config,
+    ) -> transformers.AutoModel:
+        """Returns a randomly initialised model"""
+        model = self.AUTO_MODEL_CLASS.from_config(config)
         return model
 
     def _create_auto_tokenizer(

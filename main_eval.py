@@ -50,6 +50,7 @@ def main(config_path: str) -> None:
     results = evaluator.simple_evaluate(
         model=args.model,
         model_args=args.model_args,
+        is_random=args.is_random,
         tasks=task_names,
         num_fewshot=args.num_fewshot,
         batch_size=args.batch_size,

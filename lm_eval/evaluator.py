@@ -13,6 +13,7 @@ from lm_eval.utils import positional_deprecated, run_task_tests
 def simple_evaluate(
     model,
     model_args=None,
+    is_random=False,
     tasks=[],
     num_fewshot=0,
     batch_size=None,
@@ -32,6 +33,8 @@ def simple_evaluate(
     :param model_args: Optional[str]
         String arguments for each model class, see LM.create_from_arg_string.
         Ignored if `model` argument is a LM object.
+    is_random (bool, optional, defaults to False):
+        If True the specified model will be loaded with random weights.
     :param tasks: list[Union[str, Task]]
         List of task names or Task objects. Task objects will be taken to have name task.EVAL_HARNESS_NAME if defined and type(task).__name__ otherwise.
     :param num_fewshot: int
@@ -62,7 +65,11 @@ def simple_evaluate(
         if model_args is None:
             model_args = ""
         lm = lm_eval.models.get_model(model).create_from_arg_string(
-            model_args, {"batch_size": batch_size, "device": device}
+            model_args, {
+                "batch_size": batch_size, 
+                "device": device,
+                "is_random": is_random
+                }
         )
     else:
         assert isinstance(model, lm_eval.base.LM)
