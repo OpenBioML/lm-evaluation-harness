@@ -64,10 +64,20 @@ def main(config_path: str) -> None:
 
     dumped = json.dumps(results, indent=2)
     print(dumped)
-
+    
     if args.wandb_log:
-        for task, metrics in results["results"].items():
-            wandb.log({task.split()[0]: metrics})
+
+        model_path = args.model_args.split('=')[-1].split('checkpoint-')[0][:-1]
+        table_columns = ['trainer.output_dir']
+        table_row = [model_path]
+        for task, all_metrics in results["results"].items():
+            wandb.log({task.split()[0]: all_metrics})
+            for metric, metric_value in all_metrics.items():
+                table_columns.append(f'{task}_{metric}')
+                table_row.append(metric_value)
+    
+        results_table = wandb.Table(columns=table_columns, data=[table_row])
+        wandb.log({"EvalTable": results_table})
 
 
 if __name__ == "__main__":
