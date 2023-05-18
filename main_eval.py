@@ -77,7 +77,6 @@ def main(config_path: str) -> None:
     results_table = wandb.Table(columns=table_columns, data=[table_row])
     wandb.log({"EvalTable": results_table})
 
-    # we should grid search values in table in training
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
