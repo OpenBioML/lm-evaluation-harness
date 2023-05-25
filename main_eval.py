@@ -67,8 +67,8 @@ def main(config_path: str) -> None:
     
     if args.wandb_log:
 
-        model_path = args.model_args.split('=')[-1].split('checkpoint-')[0][:-1]
-        table_columns = ['trainer.output_dir']
+        model_path = args.model_args.split('=')[-1]
+        table_columns = ['model_path']
         table_row = [model_path]
         for task, all_metrics in results["results"].items():
             wandb.log({task.split()[0]: all_metrics})
