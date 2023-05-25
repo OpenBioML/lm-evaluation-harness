@@ -68,6 +68,8 @@ def main(config_path: str) -> None:
     if args.wandb_log:
 
         model_path = args.model_args.split('=')[-1]
+        if args.is_random:
+            model_path = model_path + '_RANDOM'
         table_columns = ['model_path']
         table_row = [model_path]
         for task, all_metrics in results["results"].items():
