@@ -8,12 +8,12 @@ The task is about the contents and structure of the periodic table only.
 from lm_eval.base import MultipleChoiceTask
 
 
-# TODO: How will be cite our new tasks?
+# TODO: How will we cite our new tasks?
 
 
 class PeriodicTable(MultipleChoiceTask):
     VERSION = 0
-    DATASET_PATH = "bethanyconnolly/periodic_table"
+    DATASET_PATH = "OpenBioML/PeriodicTable"
     DATASET_NAME = None
 
     def has_training_docs(self):
