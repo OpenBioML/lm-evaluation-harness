@@ -53,6 +53,7 @@ from . import storycloze
 from . import toxigen
 from . import crowspairs
 from . import periodic_table
+from . import complete_smile
 
 ########################################
 # Translation tasks
@@ -312,6 +313,7 @@ TASK_REGISTRY = {
     # "storycloze_2018": storycloze.StoryCloze2018,
     # "sat": sat.SATAnalogies,
     "periodic_table": periodic_table.PeriodicTable,
+    "complete_smile": complete_smile.CompleteSmile,
 }
 
 

@@ -184,6 +184,12 @@ class BaseLM(LM):
 
         return self._loglikelihood_tokens(new_reqs)
 
+    def generate(self, requests):
+
+        new_reqs = [self.tok_encode(req) for req in requests]
+        return self.generate(new_reqs)
+
+
     def loglikelihood_rolling(self, requests):
         # TODO: Implement caching once we've confirmed the perplexity implementation
         # TODO: automatic batch size detection for vectorization
