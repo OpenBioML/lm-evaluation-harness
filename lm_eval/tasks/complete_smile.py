@@ -8,6 +8,8 @@ _CITATION = """
 """
 
 PROMPT_STRING = 'Complete the following to make a valid molecule: '
+TEST_SIZE = 1000
+SEED = 1234
 
 class CompleteSmile(Task):
     VERSION = 0
@@ -33,7 +35,13 @@ class CompleteSmile(Task):
         return self.dataset["validation"]
 
     def test_docs(self):
-        return self.dataset["test"]
+        test_set = self.dataset["test"]
+        split_set = test_set.train_test_split(
+            test_size=TEST_SIZE, 
+            shuffle=False,
+            seed=SEED,
+        )
+        return split_set["test"]
 
     def doc_to_text(self, doc):
         mol = doc["text"]
@@ -58,7 +66,7 @@ class CompleteSmile(Task):
         """  
         return rf.greedy_until(
             ctx, 
-            {"stop_sequences": [' '], "max_generation_length": None, "num_fewshot": None}
+            {"stop_sequences": None, "max_generation_length": None, "num_fewshot": None}
         )
 
     def process_results(self, doc, results):
@@ -71,10 +79,8 @@ class CompleteSmile(Task):
         :param results:
             The results of the requests created in construct_requests.
         """
-        is_valid = []
-        for result in results:
-            smile = decoded.split(PROMPT_STRING)[-1]
-            is_valid.append(_valid_mol_eval(smile))
+        smile = results[0].split(PROMPT_STRING)[1]
+        is_valid = self._valid_mol_eval(smile)
 
         return {
             "acc": is_valid,
@@ -95,7 +101,7 @@ class CompleteSmile(Task):
             "acc": True,
         }
 
-    def _valid_mol_eval(smile):
+    def _valid_mol_eval(self, smile):
         try:
             m1 = Chem.MolFromSmiles(smile)
         except:
