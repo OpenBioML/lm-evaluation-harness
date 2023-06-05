@@ -29,3 +29,4 @@ class EvalPipelineConfig(BaseModel):
     wandb_project: str = None
     wandb_group: str = None,
     wandb_run_name: str = None
+    wandb_entity: str = "chemnlp"

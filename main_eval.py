@@ -32,6 +32,7 @@ def main(config_path: str) -> None:
             project=args.wandb_project, 
             name=args.wandb_run_name, 
             group=args.wandb_group,
+            entity=args.wandb_entity,
             config=args,
         )
 
