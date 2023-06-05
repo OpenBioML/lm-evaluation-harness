@@ -1,14 +1,16 @@
 
 from lm_eval.base import Task, rf, mean
-from rdkit import Chem
+from rdkit import Chem, RDLogger
+import logging
 
+RDLogger.DisableLog('rdApp.*') 
 
 # TODO: Add the BibTeX citation for the task.
 _CITATION = """
 """
 
 PROMPT_STRING = 'Complete the following to make a valid molecule: '
-TEST_SIZE = 1000
+TEST_SIZE = 100
 SEED = 1234
 
 class CompleteSmile(Task):
@@ -66,7 +68,11 @@ class CompleteSmile(Task):
         """  
         return rf.greedy_until(
             ctx, 
-            {"stop_sequences": None, "max_generation_length": None, "num_fewshot": None}
+            {
+                "stop_sequences": None, # defaults to eos_token
+                "max_generation_length": None, # lm_eval default is to 256
+                "num_fewshot": len(ctx.split('\n\n')) - 1,
+            }
         )
 
     def process_results(self, doc, results):
