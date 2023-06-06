@@ -54,6 +54,7 @@ from . import toxigen
 from . import crowspairs
 from . import periodic_table
 from . import complete_smile
+from . import is_smile
 
 ########################################
 # Translation tasks
@@ -314,6 +315,7 @@ TASK_REGISTRY = {
     # "sat": sat.SATAnalogies,
     "periodic_table": periodic_table.PeriodicTable,
     "complete_smile": complete_smile.CompleteSmile,
+    "is_smile": is_smile.IsSmile,
 }
 
 
