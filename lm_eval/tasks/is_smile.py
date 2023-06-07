@@ -66,6 +66,7 @@ class IsSmile(MultipleChoiceTask):
         valid = map(self._process_valid_smile, docs)
         invalid = map(self._process_invalid_smile, docs)
         mixed_data = list(valid) + list(invalid)
+        random.seed(seed=SEED)
         mixed_data = random.choice(mixed_data, len(mixed_data)).tolist()
         return mixed_data
 
@@ -83,14 +84,14 @@ class IsSmile(MultipleChoiceTask):
         invalid_smile = smile[:slice_size]
         is_valid = Chem.MolFromSmiles(invalid_smile)
         return {
-            "query": f"{PROMPT_STRING} {invalid_smile}? Answer: ",
+            "query": f"{PROMPT_STRING} {invalid_smile}? Answer:",
             "choices": ["Yes", "No"], 
             "gold": 0 if is_valid is not None else 1,
         }
 
     def fewshot_examples(self, k, rnd):
         if self._fewshot_docs is None:
-            self._fewshot_docs = list(map(self._process_doc, self.dataset["validation"]))
+            self._fewshot_docs = self.validation_docs()
         return rnd.sample(list(self._fewshot_docs), k)
 
     def doc_to_text(self, doc):
