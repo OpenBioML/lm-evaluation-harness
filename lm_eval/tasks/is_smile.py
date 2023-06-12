@@ -9,7 +9,6 @@ the coconut_molecules dataset.
 from numpy import random
 from rdkit import Chem, RDLogger
 from lm_eval.base import MultipleChoiceTask
-import pdb
 
 RDLogger.DisableLog("rdApp.*")
 

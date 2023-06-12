@@ -6,6 +6,7 @@ The task is about the contents and structure of the periodic table only.
 
 """
 from lm_eval.base import MultipleChoiceTask
+import ast
 
 
 # TODO: How will we cite our new tasks?
@@ -51,6 +52,8 @@ class PeriodicTable(MultipleChoiceTask):
             return prompt
 
         keys = ["A", "B", "C", "D"]
+        if isinstance(doc["choices"], str):
+            doc["choices"] = [str(choice) for choice in ast.literal_eval(doc["choices"])]
         return {
             "query": format_example(doc, keys),
             "choices": doc["choices"],
@@ -60,10 +63,8 @@ class PeriodicTable(MultipleChoiceTask):
         }
 
     def fewshot_examples(self, k, rnd):
-
         if self._fewshot_docs is None:
-            self._fewshot_docs = list(map(self._process_doc, self.dataset["validation"]))
-
+            self._fewshot_docs = self.validation_docs()
         return rnd.sample(list(self._fewshot_docs), k)
 
     def doc_to_text(self, doc):
