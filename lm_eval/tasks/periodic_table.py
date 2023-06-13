@@ -9,8 +9,9 @@ from lm_eval.base import MultipleChoiceTask
 import ast
 
 
-# TODO: How will we cite our new tasks?
-
+# TODO: Add the BibTeX citation for the task.
+_CITATION = """
+"""
 
 class PeriodicTable(MultipleChoiceTask):
     VERSION = 0
@@ -18,7 +19,7 @@ class PeriodicTable(MultipleChoiceTask):
     DATASET_NAME = None
 
     def has_training_docs(self):
-        return False
+        return True
 
     def has_validation_docs(self):
         return True
@@ -26,8 +27,13 @@ class PeriodicTable(MultipleChoiceTask):
     def has_test_docs(self):
         return True
 
+    def training_docs(self):
+        if self.has_training_docs():
+            return map(self._process_doc, self.dataset["train"])
+
     def validation_docs(self):
-        return map(self._process_doc, self.dataset["validation"])
+        if self.has_validation_docs():
+            return map(self._process_doc, self.dataset["validation"])
 
     def test_docs(self):
         if self.has_test_docs():
@@ -63,8 +69,7 @@ class PeriodicTable(MultipleChoiceTask):
         }
 
     def fewshot_examples(self, k, rnd):
-        if self._fewshot_docs is None:
-            self._fewshot_docs = self.validation_docs()
+        self._fewshot_docs = self.training_docs()
         return rnd.sample(list(self._fewshot_docs), k)
 
     def doc_to_text(self, doc):
