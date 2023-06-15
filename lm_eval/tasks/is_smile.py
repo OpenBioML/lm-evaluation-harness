@@ -9,7 +9,6 @@ the coconut_molecules dataset.
 from numpy import random
 from rdkit import Chem, RDLogger
 from lm_eval.base import MultipleChoiceTask
-import pdb
 
 RDLogger.DisableLog("rdApp.*")
 
@@ -20,9 +19,9 @@ _CITATION = """
 PROMPT_STRING = "Question: Is the following a valid molecule:"
 DATA_TYPE = "text"
 SEED = 1234
-TRAIN_SIZE = 1000
+TRAIN_SIZE = 10
 TEST_SIZE = 1000
-VALID_SIZE = 100
+VALID_SIZE = 10
 
 class IsSmile(MultipleChoiceTask):
     VERSION = 0
@@ -39,28 +38,31 @@ class IsSmile(MultipleChoiceTask):
         return True
 
     def training_docs(self):
-        split_set = self.dataset["train"].train_test_split(
-            test_size=TRAIN_SIZE, 
-            shuffle=False,
-            seed=SEED,
-        )
-        return self._process_docs(split_set["test"])
+        if self.has_training_docs():
+            split_set = self.dataset["train"].train_test_split(
+                test_size=TRAIN_SIZE, 
+                shuffle=False,
+                seed=SEED,
+            )
+            return self._process_docs(split_set["test"])
 
     def validation_docs(self):
-        split_set = self.dataset["validation"].train_test_split(
-            test_size=VALID_SIZE, 
-            shuffle=False,
-            seed=SEED,
-        )
-        return self._process_docs(split_set["test"])
+        if self.has_validation_docs():
+            split_set = self.dataset["validation"].train_test_split(
+                test_size=VALID_SIZE, 
+                shuffle=False,
+                seed=SEED,
+            )
+            return self._process_docs(split_set["test"])
 
     def test_docs(self):
-        split_set = self.dataset["test"].train_test_split(
-            test_size=TEST_SIZE, 
-            shuffle=False,
-            seed=SEED,
-        )
-        return self._process_docs(split_set["test"])
+        if self.has_test_docs():
+            split_set = self.dataset["test"].train_test_split(
+                test_size=TEST_SIZE, 
+                shuffle=False,
+                seed=SEED,
+            )
+            return self._process_docs(split_set["test"])
 
     def _process_docs(self, docs):
         valid = map(self._process_valid_smile, docs)
@@ -90,8 +92,7 @@ class IsSmile(MultipleChoiceTask):
         }
 
     def fewshot_examples(self, k, rnd):
-        if self._fewshot_docs is None:
-            self._fewshot_docs = self.validation_docs()
+        self._fewshot_docs = self.validation_docs()
         return rnd.sample(list(self._fewshot_docs), k)
 
     def doc_to_text(self, doc):
