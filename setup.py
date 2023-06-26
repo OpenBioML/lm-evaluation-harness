@@ -30,6 +30,7 @@ setuptools.setup(
         "pycountry",
         "pydantic",
         "pytablewriter",
+        "rdkit",
         "rouge-score>=0.0.4",
         "sacrebleu==1.5.0",
         "scikit-learn>=0.24.1",
