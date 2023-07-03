@@ -38,7 +38,7 @@ setuptools.setup(
         "torch>=1.7",
         "tqdm-multiprocess",
         "transformers>=4.1",
-        "wandb",
+        "wandb==0.10.28",
         "zstandard",
     ],
     extras_require={
