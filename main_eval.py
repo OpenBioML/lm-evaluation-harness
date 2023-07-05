@@ -3,9 +3,9 @@ import json
 import logging
 import fnmatch
 import wandb
-from typing import Dict, Optional
 
 from lm_eval import tasks, evaluator, config
+from typing import Optional, Dict
 
 logging.getLogger("openai").setLevel(logging.WARNING)
 
@@ -27,9 +27,9 @@ def main(config_path: str, config_overrides: Optional[Dict] = None) -> None:
     raw_config = config.load_config(config_path)
     args = config.EvalPipelineConfig(**raw_config)
     if config_overrides:
-        config = config.update(config_overrides)
+        args = args.update(config_overrides)
 
-    print(config)
+    print(args)
     if args.wandb_log:
         assert (args.wandb_project is not None) and (args.wandb_run_name is not None)
         wandb.init(
