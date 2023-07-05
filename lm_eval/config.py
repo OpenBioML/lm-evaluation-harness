@@ -1,6 +1,6 @@
-from typing import Optional, Union
+from typing import Union, Dict
 from pathlib import Path
-from pydantic import BaseModel, validator
+from pydantic import BaseModel
 import yaml
 
 
@@ -30,3 +30,11 @@ class EvalPipelineConfig(BaseModel):
     wandb_group: str = None,
     wandb_run_name: str = None
     wandb_entity: str = "chemnlp"
+
+    def update(
+        self, config_changes: Dict,
+    ) -> "EvalPipelineConfig":
+        """Update evaluation configuration"""
+        for config_key, new_value in config_changes.items():
+            setattr(self, config_key, new_value)
+        return self
