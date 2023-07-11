@@ -5,6 +5,7 @@ import fnmatch
 import wandb
 
 from lm_eval import tasks, evaluator, config
+from typing import Optional, Dict
 
 logging.getLogger("openai").setLevel(logging.WARNING)
 
@@ -19,13 +20,16 @@ def pattern_match(patterns, source_list):
     return list(task_names)
 
 
-def main(config_path: str) -> None:
+def main(config_path: str, config_overrides: Optional[Dict] = None) -> None:
 
     print('running')
 
     raw_config = config.load_config(config_path)
     args = config.EvalPipelineConfig(**raw_config)
+    if config_overrides:
+        args = args.update(config_overrides)
 
+    print(args)
     if args.wandb_log:
         assert (args.wandb_project is not None) and (args.wandb_run_name is not None)
         wandb.init(
@@ -84,7 +88,16 @@ def main(config_path: str) -> None:
 
 
 if __name__ == "__main__":
+
     parser = argparse.ArgumentParser()
     parser.add_argument("config_path", help="The full path to the YAML config file.")
+
+    parser.add_argument(
+        "--config_overrides",
+        required=False,
+        default="{}",
+        help="Any overriding parameters as a JSON.",
+    )
     args = parser.parse_args()
-    main(args.config_path)
+    parsed_json_overrides = json.loads(args.config_overrides)
+    main(args.config_path, parsed_json_overrides)
