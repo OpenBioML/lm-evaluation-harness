@@ -26,6 +26,7 @@ setuptools.setup(
         "numexpr",
         "openai>=0.6.4",
         "omegaconf>=2.2",
+        "pandas",
         "pybind11>=2.6.2",
         "pycountry",
         "pydantic",

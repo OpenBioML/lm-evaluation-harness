@@ -6,6 +6,7 @@ import wandb
 
 from lm_eval import tasks, evaluator, config
 from typing import Optional, Dict
+import pandas as pd
 
 logging.getLogger("openai").setLevel(logging.WARNING)
 
@@ -86,6 +87,12 @@ def main(config_path: str, config_overrides: Optional[Dict] = None) -> None:
         results_table = wandb.Table(columns=table_columns, data=[table_row])
         wandb.log({"EvalTable": results_table})
 
+        if args.export_table_dir:
+            dataframe = pd.DataFrame(data=results_table.data, columns=results_table.columns)
+            dataframe.to_csv(
+                f'{args.export_table_dir}/{args.wandb_group}_{args.wandb_run_name}.csv',
+                index=False,
+            )
 
 if __name__ == "__main__":
 
