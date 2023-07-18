@@ -1,5 +1,5 @@
 """
-IsSmile is a custom evaluation task for them ChemNLP project.
+IsSmiles is a custom evaluation task for them ChemNLP project.
 
 This multichoice Q/A task was programatically created from 
 the coconut_molecules dataset. 
@@ -23,7 +23,7 @@ TRAIN_SIZE = 10
 TEST_SIZE = 1000
 VALID_SIZE = 10
 
-class IsSmile(MultipleChoiceTask):
+class IsSmiles(MultipleChoiceTask):
     VERSION = 0
     DATASET_PATH = "OpenBioML/coconut_molecules"
     DATASET_NAME = None
@@ -65,14 +65,14 @@ class IsSmile(MultipleChoiceTask):
             return self._process_docs(split_set["test"])
 
     def _process_docs(self, docs):
-        valid = map(self._process_valid_smile, docs)
-        invalid = map(self._process_invalid_smile, docs)
+        valid = map(self._process_valid_smiles, docs)
+        invalid = map(self._process_invalid_smiles, docs)
         mixed_data = list(valid) + list(invalid)
         random.seed(seed=SEED)
         mixed_data = random.choice(mixed_data, len(mixed_data)).tolist()
         return mixed_data
 
-    def _process_valid_smile(self, doc):
+    def _process_valid_smiles(self, doc):
         is_valid = Chem.MolFromSmiles(doc[DATA_TYPE])
         return {
             "query": f"{PROMPT_STRING} {doc[DATA_TYPE]}? Answer:",
@@ -80,13 +80,13 @@ class IsSmile(MultipleChoiceTask):
             "gold": 0 if is_valid is not None else 1,
         }
 
-    def _process_invalid_smile(self, doc):
-        smile = doc[DATA_TYPE]
-        slice_size = random.randint(1, len(smile))
-        invalid_smile = smile[:slice_size]
-        is_valid = Chem.MolFromSmiles(invalid_smile)
+    def _process_invalid_smiles(self, doc):
+        smiles = doc[DATA_TYPE]
+        slice_size = random.randint(1, len(smiles))
+        invalid_smiles = smiles[:slice_size]
+        is_valid = Chem.MolFromSmiles(invalid_smiles)
         return {
-            "query": f"{PROMPT_STRING} {invalid_smile}? Answer:",
+            "query": f"{PROMPT_STRING} {invalid_smiles}? Answer:",
             "choices": ["Yes", "No"], 
             "gold": 0 if is_valid is not None else 1,
         }
